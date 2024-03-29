@@ -105,7 +105,8 @@ npm install -g typescript-language-server typescript
  
  ## Warp-Terminal
  https://app.warp.dev/get_warp?package=deb
- sudo apt install bat ripgrep
+ sudo apt install ripgrep
+ pacstall I bat-deb
  
  ## Nerd Fonts
  cd Descargas/
@@ -120,6 +121,7 @@ ssh-add ~/.ssh/id_ecdsa
 
 ## Zsh Debian
 sudo apt-get install zsh
+chsh -s /bin/zsh
 
 ## Dependencias de Zsh
 sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
