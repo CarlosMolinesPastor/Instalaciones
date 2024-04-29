@@ -65,6 +65,7 @@ sudo pacman -S swayfx swaybg swayidle swaylock wlroots wl-clipboard waybar wofi 
 foot mako grim slurp wf-recorder yad wlogout geany mpv mpd mpc \
 imagemagick  xorg-xwayland xdg-desktop-portal-wlr playerctl pastel python-pywal \
 alacritty rofi pulsemixer
+yay -S light
 
 # Opciones sway
 sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED
