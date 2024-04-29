@@ -1,127 +1,36 @@
-#/bin/bash!
-##Instalacion de Debian:
+## Pasos preliminares
+## Copias archivo de .ssh de dotfiles a la carpeta .ssh
+## Despues pasamos a instalar ciertas cosas
 
-## Multimedia:
-
-wget https://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb
-sudo dpkg -i deb-multimedia-keyring_2016.8.1_all.deb
-nano /etc/apt/sources.list
-# anadir al final y en todas las lineas la seccion contrib
-deb https://www.deb-multimedia.org testing main non-free" >> /etc/apt/sources.list
-
-##Extensiones:
-#Dash to dock
-#Screenshot Tool
-#caffeine
-#Appindicator and KStatusNotifierItem
-#Auto move
-#open bar
-
-##Herramientas compilacion
-sudo apt -y install build-essential checkinstall make automake cmake autoconf git git-core curl dpkg wget linux-headers-$(uname -r)
-sudo apt install nala
-## Pacstall
-sudo bash -c "$(curl -fsSL https://pacstall.dev/q/install)"
-sudo apt install neofetch locat
-## neofetch | lolcat
-echo 'alias neofetch="neofetch | lolcat"' >> ~/.zshrc
-echo 'alias neofetch="neofetch | lolcat"' >> ~/.bashrc
-
-##Flatpak y snap
-sudo apt install flatpak
-sudo apt install gnome-software-plugin-flatpak gnome-software-plugin-snap
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub org.kde.kdenlive krita org.onlyoffice.desktopeditors com.github.IsmaelMartinez.teams_for_linux com.github.tchx84.Flatseal com.bitwarden.desktop com.nextcloud.desktopclient.nextcloud io.github.giantpinkrobots.flatsweep com.github.calo001.fondo com.obsproject.Studio
-## App Fondo
-# add xdg-run/gvfsd in Filesystem using Flatseal (download from Flathub) 
-##Snap
-sudo apt install snapd
-sudo ln -s /var/lib/snapd/snap /snap
-sudo snap install core android-studio --classic muon-ssh telegram-desktop
-
-## Varios 
- 
-sudo apt -y install gdebi ffmpeg fonts-inconsolata fonts-droid-fallback xfonts-terminus fonts-droid-fallback ttf-bitstream-vera fonts-cantarell fonts-liberation fonts-oflb-asana-math fonts-mathjax ttf-mscorefonts-installer ttf-bitstream-vera fonts-liberation fonts-noto fonts-stix cabextract 
-
-## Compresion de archivos
-sudo apt -y install unace p7zip-full lzip arj mpack lzma lzop unzip zip bzip2 lhasa cabextract lrzip rzip zpaq kgb xz-utils sharutils
-
-# Multimedia
-sudo apt -y install mpv vlc audacity mplayer kodi shotcut
-
-# Brave
-sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
-sudo apt -y update
-sudo apt -y install brave-browser
-
-## Conectar Android
-sudo apt -y install  mtp-tools libmtp-dev libmtp-runtime
-
-## Imagen
-sudo apt -y install inkscape gimp mypaint gpick krita
-
-## Java
- sudo apt -y install default-jre default-jdk
- sudo update-alternatives --list java
- # Lo que salga lo pegamos en el archivo environment
- sudo nano /etc/environment
- ejemplo: JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
- # Recargamos el archivo
- sudo source /etc/environment
- 
- ## Homebrew
- 
- /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/carlos/.bashrc
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/carlos/.zshrc
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    
-#Neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-sudo rm -rf /opt/nvim
-sudo tar -C /opt -xzf nvim-linux64.tar.gz
-echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.zshrc
-echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.bashrc
- # Rust
- sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
- curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
- cargo install silicon
- 
- # Node
- wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
- ##Copiar esto en bashrc o zshrc
- export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm ls-remote
-nvm install xxxxxx
-npm install -g typescript-language-server typescript
-
- ## Ruby & colorls
- sudo apt install ruby ruby-dev
- sudo gem install colorls
- 
- ## Warp-Terminal
- https://app.warp.dev/get_warp?package=deb
- sudo apt install bat ripgrep
- 
- ## Nerd Fonts
- cd Descargas/
-bash -c  "$(curl -fsSL https://raw.githubusercontent.com/officialrajdeepsingh/nerd-fonts-installer/main/install.sh)"
- 
- ## ssh
+## ssh
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/*
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/id_ecdsa
+ssh-add ~/.ssh/github
 
-## Zsh Debian
-sudo apt-get install zsh
+##Flutter
+yay -S flutter
+sudo groupadd flutterusers
+sudo gpasswd -a $USER flutterusers
+sudo chown -R :flutterusers /opt/flutter
+sudo chmod -R g+w /opt/flutter/
 
-## Dependencias de Zsh
+## Chaotic only Arch no Manjaro
+sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign-key 3056513887B78AEB
+sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+
+sudo nano /etc/pacman.conf
+------------------ copy ------------------
+[chaotic-aur]
+Include = /etc/pacman.d/chaotic-mirrorlist 
+------------------------------------------
+
+## C# & Neovim
+sudo pacman -S neovim-remote dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools npm nodejs python-pip python-pipx wmctrl neovim 
+
+##Dependencias de Zsh
 sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
@@ -131,123 +40,109 @@ cd ~/.oh-my-zsh/custom/plugins/antigen/
 curl -L git.io/antigen > antigen.zsh
 cd ~
 
-## Vscode
-sudo apt-get install wget gpg
-wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
-sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-rm -f packages.microsoft.gpg
-sudo apt install apt-transport-https
-sudo apt update
-sudo apt install code
 
-## Dotnet
-wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-rm packages-microsoft-prod.deb
+##Pamac & snap
+sudo pacman -S pamac-nosnap
+yay -S snapd
+sudo systemctl enable --now snapd.socket
+sudo ln -s /var/lib/snapd/snap /snap
 
-## Unity
-wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
-sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
-sudo apt update
-sudo apt-get install unityhub
+## Editores/Ide
+sudo pacman -S visual-studio-code-bin unityhub
 
-## WhiteSur
-git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git --depth=1
-cd WhiteSur-gtk-theme  
-./install.sh -t all -m -N stable -s 220 -l --normal --round
+## NVIM VS UNITY
+git clone git@github.com:Domeee/com.cloudedmountain.ide.neovim.git
+##Add the neovim unity package to unity
+Window > Package Manager > Add package from disk > select package.json
+##Set neovim as external script edtior
+Edit > Preferences > External Tools > External Script Editor > select Neovim
+##Start an nvim server
+# "/tmp/nvimsocket" is the name of the server and currently hardcoded
+nvim --listen /tmp/nvimsocket
 
-## Tela Icon
-git clone https://github.com/vinceliuice/Tela-icon-theme.git
-cd Tela-icon-theme
-./install.sh -a
+## Sway
+sudo pacman -S sway swaybg swayidle swaylock wlroots wl-clipboard waybar wofi kanshi \
+foot mako grim slurp wf-recorder light yad wlogout thunar geany mpv mpd mpc viewnior \
+imagemagick xfce-polkit xorg-xwayland xdg-desktop-portal-wlr playerctl pastel python-pywal \
+alacritty rofi pulsemixer
 
-## Colloid
-
-sudo apt install gnome-themes-extra gtk2-engines-murrine
-git clone https://github.com/vinceliuice/Colloid-gtk-theme.git
-cd Colloid-gtk-theme
-./install.sh -s compact -l
-
-## Iconos Colloid
-git clone https://github.com/vinceliuice/Colloid-icon-theme.git
-cd Colloid-icon-theme
-./install.sh
-
-
-## Stylepack para pps en flatpak
-apt install ostree appstream-util
-git clone https://github.com/refi64/stylepak.git
-cd stylepak
-./stylepak install-user
-./stylepak install-system
-
-## Nafivier convierte cualquier web en app necesitas node instalado
-sudo apt install imagemagick
-npm install -g nativefier
-
-## Mongodb
-sudo apt-get install gnupg curl
-curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
-   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
-   --dearmor
-echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-sudo apt update && sudo apt-get install -y mongodb-org
-sudo systemctl daemon-reload
-sudo systemctl enable mongod
-sudo systemctl start mongod
-#Compass
-wget https://downloads.mongodb.com/compass/mongodb-compass_1.40.4_amd64.deb
-sudo dpkg -i mongodb-compass_1.40.4_amd64.deb
-
-## FLutter
-#Facil
-sudo snap install flutter --classic
-#A mano
-#Descargamos el tar.xz de la pagina de flutter
-#tar xf ~/Descargas/flutter_linux_vX.X.X-stable.tar.xz
-tar xf ~/Descargas/flutter_linux_3.19.3-stable.tar.xz
-mkdir ~/Development
-mv flutter ~/.flutter
-echo 'export PATH=$PATH:$HOME/.flutter/bin' >> ~/.zshrc
-source ~/.zshrc
-echo 'export PATH=$PATH:$HOME/.flutter/bin' >> ~/.bashrc
-source ~/.bashrc
-sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-flutter precache
-brew install gtk+3
-flutter doctor
-
-
-## Flet
-sudo apt install python3-pip
+# Opciones sway
 sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED
-pip install flet
+python3 -m pip install --user tendo 
+python3 -m pip install --user i3ipc
 
-## VirtualBox
-echo "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian/ bookworm contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
-wget -O - https://www.virtualbox.org/download/oracle_vbox_2016.asc |  sudo tee /etc/apt/trusted.gpg.d/oracle_vbox.asc
-echo "deb http://ftp.debian.org/debian bookworm main contrib" | sudo tee /etc/apt/sources.list.d/bookworm.list
-sudo apt update && sudo apt install virtualbox-7.0
-sudo usermod -a -G vboxusers $USER
-
-## Temas geany
-git clone https://github.com/codebrainz/geany-themes.git
-cd geany-themes
-./install
-cd ..
-rm -Rf geany-themes
+#java en sway
+sudo nano /etc/environment
+------- copy ----------------
+_JAVA_AWT_WM_NONREPARENTING=1
+----------------------------
 
 
-## Inrtellij
-curl -s https://s3.eu-central-1.amazonaws.com/jetbrains-ppa/0xA6E8698A.pub.asc | gpg --dearmor | sudo tee /usr/share/keyrings/jetbrains-ppa-archive-keyring.gpg > /dev/null
-echo "deb [signed-by=/usr/share/keyrings/jetbrains-ppa-archive-keyring.gpg] http://jetbrains-ppa.s3-website.eu-central-1.amazonaws.com any main" | sudo tee /etc/apt/sources.list.d/jetbrains-ppa.list > /dev/null
-sudo apt update
-sudo apt install intellij-idea-community
+## GIT
+git clone --bare  git@github.com:karlinux47/dotfiles.git $HOME/.cfg
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+echo ".cfg" >> .gitignore
+config config --local status.showUntrackedFiles no
+config checkout // nos dice si hay algun problema
 
-## Xanmod kernel
-wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
-echo 'deb [signed-by=/usr/share/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
-## X99
-sudo apt update && sudo apt install linux-xanmod-x64v3
+sudo pacman -S lazygit silicon
 
+### Mongo
+yay -S mongodb-bin mongosh-bin mongodb-tools
+#### mongodb-comppas en flatpak
+
+### Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+### Bat y Colorls
+sudo pacman -s bat ruby
+gem install colorls
+
+##Picom Blur
+blur:
+{
+method = "gaussian";
+size = 20; 
+deviation = 15;
+};
+
+## APPS and more
+yay -S btop cava neofetch noise-suppression-for-voice unimatrix gtop wezterm 
+
+Temas
+yay -S kvantum-theme-catppuccin-git
+cp -R /usr/share/themes/Catppuccin-Mocha/gtk-4.0 ~/.config/gtk-4.0
+flatpak override --user --filesystem=xdg-config/gtk-4.0
+sudo flatpak override --filesystem=xdg-config/gtk-4.0
+
+nano ~/.config/gtk-3.0/settings.ini
+#-------- Paste -------
+[Settings]
+gtk-application-prefer-dark-theme=true
+gtk-theme-name = Catppuccin-Mocha
+gtk-enable-animations=true
+gtk-font-name=Noto Sans 9
+gtk-icon-theme-name=Luv-folders-Dark
+gtk-cursor-theme-name=Qogirr
+gtk-cursor-theme-size=0
+gtk-toolbar-style=GTK_TOOLBAR_ICONS
+gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
+gtk-button-images=0
+gtk-menu-images=1
+gtk-enable-event-sounds=0
+gtk-enable-input-feedback-sounds=0
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintslight
+gtk-xft-rgba=rgb
+#------- End ---------
+
+##Utilizacion kvantum y repintado de java en sway
+sudo nvim /etc/environment
+#-------------- Paste --------------
+#QT_QPA_PLATFORMTHEME=qt5ct
+QT_STYLE_OVERRIDE=kvantum
+EDITOR=nano
+BROWSER=firefox
+_JAVA_AWT_WM_NONREPARENTING=1
+------------------------------------
