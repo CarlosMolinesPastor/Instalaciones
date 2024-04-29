@@ -61,9 +61,9 @@ Edit > Preferences > External Tools > External Script Editor > select Neovim
 nvim --listen /tmp/nvimsocket
 
 ## Sway
-sudo pacman -S sway swaybg swayidle swaylock wlroots wl-clipboard waybar wofi kanshi \
-foot mako grim slurp wf-recorder light yad wlogout thunar geany mpv mpd mpc viewnior \
-imagemagick xfce-polkit xorg-xwayland xdg-desktop-portal-wlr playerctl pastel python-pywal \
+sudo pacman -S swayfx swaybg swayidle swaylock wlroots wl-clipboard waybar wofi kanshi \
+foot mako grim slurp wf-recorder yad wlogout geany mpv mpd mpc \
+imagemagick  xorg-xwayland xdg-desktop-portal-wlr playerctl pastel python-pywal \
 alacritty rofi pulsemixer
 
 # Opciones sway
