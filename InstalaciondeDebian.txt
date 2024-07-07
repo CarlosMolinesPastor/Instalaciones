@@ -1,15 +1,18 @@
 #/bin/bash!
 ##Instalacion de Debian:
 
+mkdir instalacion
+cd instalacion
+
 ## Multimedia:
 
 wget https://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb
 sudo dpkg -i deb-multimedia-keyring_2016.8.1_all.deb
 nano /etc/apt/sources.list
 # anadir al final y en todas las lineas la seccion contrib
-deb https://www.deb-multimedia.org testing main non-free" >> /etc/apt/sources.list
+sudo echo "deb https://www.deb-multimedia.org stable main non-free" >> /etc/apt/sources.list
 
-##Extensiones:
+##Extensiones GNOME:
 #Dash to dock
 #Screenshot Tool
 #caffeine
@@ -18,42 +21,40 @@ deb https://www.deb-multimedia.org testing main non-free" >> /etc/apt/sources.li
 #open bar
 
 ##Herramientas compilacion
-sudo apt -y install build-essential checkinstall make automake cmake autoconf git git-core curl dpkg wget linux-headers-$(uname -r)
-sudo apt install nala
+sudo apt -y install build-essential checkinstall make automake cmake autoconf git git-core curl dpkg wget linux-headers-$(uname -r) wget gpg nala neofetch locat snapd flatpak gnome-software-plugin-flatpak gnome-software-plugin-snap gdebi ffmpeg fonts-inconsolata fonts-droid-fallback xfonts-terminus fonts-droid-fallback ttf-bitstream-vera fonts-cantarell fonts-liberation fonts-oflb-asana-math fonts-mathjax ttf-mscorefonts-installer ttf-bitstream-vera fonts-liberation fonts-noto fonts-stix cabextract 
+
+
 ## Pacstall
 sudo bash -c "$(curl -fsSL https://pacstall.dev/q/install)"
-sudo apt install neofetch locat
 ## neofetch | lolcat
 echo 'alias neofetch="neofetch | lolcat"' >> ~/.zshrc
 echo 'alias neofetch="neofetch | lolcat"' >> ~/.bashrc
 
 ##Flatpak y snap
-sudo apt install flatpak
-sudo apt install gnome-software-plugin-flatpak gnome-software-plugin-snap
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub org.kde.kdenlive krita org.onlyoffice.desktopeditors com.github.IsmaelMartinez.teams_for_linux com.github.tchx84.Flatseal com.bitwarden.desktop com.nextcloud.desktopclient.nextcloud io.github.giantpinkrobots.flatsweep com.github.calo001.fondo com.obsproject.Studio
-## App Fondo
-# add xdg-run/gvfsd in Filesystem using Flatseal (download from Flathub) 
-##Snap
-sudo apt install snapd
+flatpak install flathub org.kde.kdenlive krita org.onlyoffice.desktopeditors com.github.IsmaelMartinez.teams_for_linux com.github.tchx84.Flatseal com.bitwarden.desktop com.nextcloud.desktopclient.nextcloud io.github.giantpinkrobots.flatsweep com.obsproject.Studio org.openshot.OpenShot
 sudo ln -s /var/lib/snapd/snap /snap
-sudo snap install core android-studio --classic muon-ssh telegram-desktop
-
-## Varios 
- 
-sudo apt -y install gdebi ffmpeg fonts-inconsolata fonts-droid-fallback xfonts-terminus fonts-droid-fallback ttf-bitstream-vera fonts-cantarell fonts-liberation fonts-oflb-asana-math fonts-mathjax ttf-mscorefonts-installer ttf-bitstream-vera fonts-liberation fonts-noto fonts-stix cabextract 
+# sudo snap install core android-studio --classic muon-ssh telegram-desktop
+## App Fondo
+# flatpak install com.github.calo001.fondo 
+# add xdg-run/gvfsd in Filesystem using Flatseal (download from Flathub) 
 
 ## Compresion de archivos
 sudo apt -y install unace p7zip-full lzip arj mpack lzma lzop unzip zip bzip2 lhasa cabextract lrzip rzip zpaq kgb xz-utils sharutils
 
 # Multimedia
-sudo apt -y install mpv vlc audacity mplayer kodi shotcut
+sudo apt -y install vlc audacity mplayer kodi
 
 # Brave
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 sudo apt -y update
 sudo apt -y install brave-browser
+
+# Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt -y install google-chrome-stable_current_amd64.deb
+rm google-chrome-stable_current_amd64.deb
 
 ## Conectar Android
 sudo apt -y install  mtp-tools libmtp-dev libmtp-runtime
@@ -62,21 +63,20 @@ sudo apt -y install  mtp-tools libmtp-dev libmtp-runtime
 sudo apt -y install inkscape gimp mypaint gpick krita
 
 ## Java
- sudo apt -y install default-jre default-jdk
- sudo update-alternatives --list java
- # Lo que salga lo pegamos en el archivo environment
- sudo nano /etc/environment
- ejemplo: JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
- # Recargamos el archivo
- sudo source /etc/environment
+sudo apt -y install default-jre default-jdk
+sudo update-alternatives --list java
+# Lo que salga lo pegamos en el archivo environment
+sudo nano /etc/environment
+#ejemplo: JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+# Recargamos el archivo
+sudo source /etc/environment
  
- ## Homebrew
- 
- /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+## Homebrew 
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/carlos/.bashrc
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/carlos/.zshrc
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     
 #Neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
@@ -84,35 +84,35 @@ sudo rm -rf /opt/nvim
 sudo tar -C /opt -xzf nvim-linux64.tar.gz
 echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.zshrc
 echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.bashrc
- # Rust
- sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
- curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
- cargo install silicon
+# Rust & silicon
+sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cargo install silicon
  
- # Node
- wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
- ##Copiar esto en bashrc o zshrc
- export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm ls-remote
-nvm install xxxxxx
-npm install -g typescript-language-server typescript
+# Node
+#wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+##Copiar esto en bashrc o zshrc
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#nvm ls-remote
+#nvm install xxxxxx
+#npm install -g typescript-language-server typescript
 
- ## Ruby & colorls
- sudo apt install ruby ruby-dev
- sudo gem install colorls
+## Ruby & colorls
+sudo apt install ruby ruby-dev
+sudo gem install colorls --user
  
- ## Warp-Terminal
- https://app.warp.dev/get_warp?package=deb
- sudo apt install ripgrep
- pacstall I bat-deb
+## Warp-Terminal
+#https://app.warp.dev/get_warp?package=deb
+sudo apt install ripgrep bat
+#pacstall I bat-deb
  
- ## Nerd Fonts
- cd Descargas/
+## Nerd Fonts
+cd Descargas/
 bash -c  "$(curl -fsSL https://raw.githubusercontent.com/officialrajdeepsingh/nerd-fonts-installer/main/install.sh)"
  
- ## ssh
+## ssh
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/*
 eval "$(ssh-agent -s)"
@@ -134,7 +134,6 @@ curl -L git.io/antigen > antigen.zsh
 cd ~
 
 ## Vscode
-sudo apt-get install wget gpg
 wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
 sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
 sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
@@ -208,22 +207,24 @@ sudo snap install flutter --classic
 #A mano
 #Descargamos el tar.xz de la pagina de flutter
 #tar xf ~/Descargas/flutter_linux_vX.X.X-stable.tar.xz
-tar xf ~/Descargas/flutter_linux_3.19.3-stable.tar.xz
-mkdir ~/Development
-mv flutter ~/.flutter
-echo 'export PATH=$PATH:$HOME/.flutter/bin' >> ~/.zshrc
-source ~/.zshrc
-echo 'export PATH=$PATH:$HOME/.flutter/bin' >> ~/.bashrc
-source ~/.bashrc
-sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-flutter precache
-brew install gtk+3
-flutter doctor
+#tar xf ~/Descargas/flutter_linux_3.19.3-stable.tar.xz
+#mkdir ~/Development
+#mv flutter ~/.flutter
+#echo 'export PATH=$PATH:$HOME/.flutter/bin' >> ~/.zshrc
+#source ~/.zshrc
+#echo 'export PATH=$PATH:$HOME/.flutter/bin' >> ~/.bashrc
+#source ~/.bashrc
+#sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+#flutter precache
+#brew install gtk+3
+#flutter doctor
 
 
 ## Flet
 sudo apt install python3-pip
 sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED
+# python 3.12
+# sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED
 pip install flet
 
 ## VirtualBox
@@ -251,5 +252,5 @@ sudo apt install intellij-idea-community
 wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
 echo 'deb [signed-by=/usr/share/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
 ## X99
-sudo apt update && sudo apt install linux-xanmod-x64v3
-
+# sudo apt update && sudo apt install linux-xanmod-x64v3
+# Consultar el paquete a instalar en https://xanmod.org/
