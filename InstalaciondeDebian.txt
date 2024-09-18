@@ -4,13 +4,15 @@
 mkdir instalacion
 cd instalacion
 
-## Multimedia:
-
+## Multimedia: 
 wget https://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb
 sudo dpkg -i deb-multimedia-keyring_2016.8.1_all.deb
 nano /etc/apt/sources.list
 # anadir al final y en todas las lineas la seccion contrib
+# for stable
 sudo echo "deb https://www.deb-multimedia.org stable main non-free" >> /etc/apt/sources.list
+# for testing
+sudo echo "deb https://www.deb-multimedia.org testing main non-free" >> /etc/apt/sources.list
 
 ##Extensiones GNOME:
 #Dash to dock
@@ -21,18 +23,16 @@ sudo echo "deb https://www.deb-multimedia.org stable main non-free" >> /etc/apt/
 #open bar
 
 ##Herramientas compilacion
-sudo apt -y install build-essential checkinstall make automake cmake autoconf git git-core curl dpkg wget linux-headers-$(uname -r) wget gpg nala neofetch locat snapd flatpak gnome-software-plugin-flatpak gnome-software-plugin-snap gdebi ffmpeg fonts-inconsolata fonts-droid-fallback xfonts-terminus fonts-droid-fallback ttf-bitstream-vera fonts-cantarell fonts-liberation fonts-oflb-asana-math fonts-mathjax ttf-mscorefonts-installer ttf-bitstream-vera fonts-liberation fonts-noto fonts-stix cabextract 
-
+sudo apt -y install build-essential checkinstall make automake cmake autoconf git git-core curl dpkg wget linux-headers-$(uname -r) wget gpg nala neofetch locat snapd flatpak gdebi ffmpeg fonts-inconsolata fonts-droid-fallback xfonts-terminus fonts-droid-fallback ttf-bitstream-vera fonts-cantarell fonts-liberation fonts-oflb-asana-math fonts-mathjax ttf-mscorefonts-installer ttf-bitstream-vera fonts-liberation fonts-noto fonts-stix cabextract 
+##Gnome
+gnome-software-plugin-flatpak gnome-software-plugin-snap 
 
 ## Pacstall
 sudo bash -c "$(curl -fsSL https://pacstall.dev/q/install)"
-## neofetch | lolcat
-echo 'alias neofetch="neofetch | lolcat"' >> ~/.zshrc
-echo 'alias neofetch="neofetch | lolcat"' >> ~/.bashrc
 
 ##Flatpak y snap
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub org.kde.kdenlive krita org.onlyoffice.desktopeditors com.github.IsmaelMartinez.teams_for_linux com.github.tchx84.Flatseal com.bitwarden.desktop com.nextcloud.desktopclient.nextcloud io.github.giantpinkrobots.flatsweep com.obsproject.Studio org.openshot.OpenShot
+#flatpak install flathub org.kde.kdenlive krita org.onlyoffice.desktopeditors com.github.IsmaelMartinez.teams_for_linux com.github.tchx84.Flatseal com.bitwarden.desktop com.nextcloud.desktopclient.nextcloud io.github.giantpinkrobots.flatsweep com.obsproject.Studio org.openshot.OpenShot
 sudo ln -s /var/lib/snapd/snap /snap
 # sudo snap install core android-studio --classic muon-ssh telegram-desktop
 ## App Fondo
@@ -43,7 +43,7 @@ sudo ln -s /var/lib/snapd/snap /snap
 sudo apt -y install unace p7zip-full lzip arj mpack lzma lzop unzip zip bzip2 lhasa cabextract lrzip rzip zpaq kgb xz-utils sharutils
 
 # Multimedia
-sudo apt -y install vlc audacity mplayer kodi
+sudo apt -y install vlc audacity mplayer kodi kdenlive shotcut
 
 # Brave
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
