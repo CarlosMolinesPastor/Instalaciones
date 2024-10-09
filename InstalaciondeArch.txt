@@ -2,35 +2,28 @@
 ## Copias archivo de .ssh de dotfiles a la carpeta .ssh
 ## Despues pasamos a instalar ciertas cosas
 
-## ssh
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/*
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ecdsa
-ssh-add ~/.ssh/github
-
-##Flutter
-yay -S flutter
-sudo groupadd flutterusers
-sudo gpasswd -a $USER flutterusers
-sudo chown -R :flutterusers /opt/flutter
-sudo chmod -R g+w /opt/flutter/
+## yay && various for zsh
+sudo pacman -S --needed base-devel git curl wget zsh fzf ripgrep lsd bat ruby starship zsh-completions zsh-autosuggestions alacritty kitty
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+yay --version
 
 ## Chaotic only Arch no Manjaro
 sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 sudo pacman-key --lsign-key 3056513887B78AEB
 sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
 
-sudo nano /etc/pacman.conf
------------------- copy ------------------
-[chaotic-aur]
-Include = /etc/pacman.d/chaotic-mirrorlist 
-------------------------------------------
+echo "[chaotic-aur] \nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf > /dev/null
 
-## C# & Neovim
-sudo pacman -S neovim-remote dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools npm nodejs python-pip python-pipx wmctrl neovim 
+## octopi
+sudo pacman -S octopi
 
-##Dependencias de Zsh
+## zsh
+echo $SHELL
+chsh -s /bin/zsh
+# Close session and re-open
+# zsh dependencies
 sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
@@ -39,24 +32,58 @@ mkdir ~/.oh-my-zsh/custom/plugins/antigen/
 cd ~/.oh-my-zsh/custom/plugins/antigen/
 curl -L git.io/antigen > antigen.zsh
 cd ~
+git clone https://github.com/CarlosMolinesPastor/zsh.git
+cp ~/zsh/.zshrc ~/.zshrc
+gem install colorls --user-install
+source .zshrc
 
+## ssh
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/*
+eval "$(ssh-agent -s)"
+#ssh-add ~/.ssh/id_ecdsa
+#ssh-add ~/.ssh/github
 
-##Pamac & snap
-sudo pacman -S pamac-nosnap
-yay -S snapd
-sudo systemctl enable --now snapd.socket
-sudo ln -s /var/lib/snapd/snap /snap
+## Neovim 
+sudo pacman -S neovim neovim remote
+## LazyVim
+mv ~/.config/nvim{,.bak}
+git clone https://github.com/LazyVim/starter ~/.config/nvim
+rm -rf ~/.config/nvim/.git
+## Lazyvim karlinux
+sudo pacman -S lazygit silicon
+git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 
 ## Editores/Ide
-sudo pacman -S visual-studio-code-bin unityhub
+sudo pacman -S visual-studio-code-bin unityhub intellij-idea-community-edition android-studio
+
+## flutter
+sudo pacman -S chromium jdk17-openjdk jdk-openjdk
+yay -S flutter
+yes | flutter doctor --android-licenses
+## only if not works
+# sudo groupadd flutterusers
+# sudo gpasswd -a $USER flutterusers
+# sudo chown -R :flutterusers /opt/flutter
+# sudo chmod -R g+w /opt/flutter/
+
+## C#
+sudo pacman -S dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools npm nodejs python-pip python-pipx wmctrl
+
+### Mongo
+yay -S mongodb-bin mongosh-bin mongodb-tools mongodb-comppas
+#### mongodb-comppas en flatpak
+
+### Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ## NVIM VS UNITY
 git clone git@github.com:Domeee/com.cloudedmountain.ide.neovim.git
-##Add the neovim unity package to unity
-Window > Package Manager > Add package from disk > select package.json
-##Set neovim as external script edtior
-Edit > Preferences > External Tools > External Script Editor > select Neovim
-##Start an nvim server
+## Add the neovim unity package to unity
+## Window > Package Manager > Add package from disk > select package.json
+## Set neovim as external script edtior
+## Edit > Preferences > External Tools > External Script Editor > select Neovim
+## Start an nvim server
 # "/tmp/nvimsocket" is the name of the server and currently hardcoded
 nvim --listen /tmp/nvimsocket
 
@@ -64,42 +91,27 @@ nvim --listen /tmp/nvimsocket
 sudo pacman -S swayfx swaybg swayidle swaylock wlroots wl-clipboard waybar wofi kanshi \
 foot mako grim slurp wf-recorder yad wlogout geany mpv mpd mpc \
 imagemagick  xorg-xwayland xdg-desktop-portal-wlr playerctl pastel python-pywal \
-alacritty rofi pulsemixer
+rofi pulsemixer
 yay -S light
-
 # Opciones sway
-sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED
-python3 -m pip install --user tendo 
-python3 -m pip install --user i3ipc
-
-#java en sway
+# sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED
+# sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED
+# python3 -m pip install --user tendo 
+# python3 -m pip install --user i3ipc
+# java en sway
 sudo nano /etc/environment
 ------- copy ----------------
 _JAVA_AWT_WM_NONREPARENTING=1
 ----------------------------
 
-
 ## GIT
-git clone --bare  git@github.com:karlinux47/dotfiles.git $HOME/.cfg
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-echo ".cfg" >> .gitignore
-config config --local status.showUntrackedFiles no
-config checkout // nos dice si hay algun problema
+# git clone --bare  git@github.com:karlinux47/dotfiles.git $HOME/.cfg
+# alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+# echo ".cfg" >> .gitignore
+# config config --local status.showUntrackedFiles no
+#config checkout // nos dice si hay algun problema
 
-sudo pacman -S lazygit silicon
-
-### Mongo
-yay -S mongodb-bin mongosh-bin mongodb-tools
-#### mongodb-comppas en flatpak
-
-### Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-### Bat y Colorls
-sudo pacman -s bat ruby
-gem install colorls
-
-##Picom Blur
+## Picom Blur
 blur:
 {
 method = "gaussian";
@@ -108,11 +120,11 @@ deviation = 15;
 };
 
 ## APPS and more
-yay -S btop cava neofetch noise-suppression-for-voice unimatrix gtop wezterm 
+yay -S btop cava neofetch noise-suppression-for-voice unimatrix gtop 
 
 Temas
-yay -S kvantum-theme-catppuccin-git
-cp -R /usr/share/themes/Catppuccin-Mocha/gtk-4.0 ~/.config/gtk-4.0
+yay -S kvantum-theme-catppuccin-git catppuccin-gtk-theme-mocha
+cp -R /usr/share/themes/Catppuccin-Mocha-Standard-Pink-Dark/gtk-4.0 ~/.config/gtk-4.0
 flatpak override --user --filesystem=xdg-config/gtk-4.0
 sudo flatpak override --filesystem=xdg-config/gtk-4.0
 
@@ -120,7 +132,7 @@ nano ~/.config/gtk-3.0/settings.ini
 #-------- Paste -------
 [Settings]
 gtk-application-prefer-dark-theme=true
-gtk-theme-name = Catppuccin-Mocha
+gtk-theme-name = Catppuccin-Mocha-Standard-Pink-Dark
 gtk-enable-animations=true
 gtk-font-name=Noto Sans 9
 gtk-icon-theme-name=Luv-folders-Dark
@@ -146,4 +158,4 @@ QT_STYLE_OVERRIDE=kvantum
 EDITOR=nano
 BROWSER=firefox
 _JAVA_AWT_WM_NONREPARENTING=1
-------------------------------------
+#------------------------------------
