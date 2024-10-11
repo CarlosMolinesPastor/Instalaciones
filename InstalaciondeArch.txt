@@ -54,6 +54,16 @@ rm -rf ~/.config/nvim/.git
 sudo pacman -S lazygit silicon
 git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 
+# Node nvm npm
+#wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+##Copiar esto en bashrc o zshrc
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#nvm ls-remote
+#nvm install XXXXLast ltsXXXX
+#npm install -g typescript-language-server typescript
+
 ## Editores/Ide
 sudo pacman -S visual-studio-code-bin unityhub intellij-idea-community-edition android-studio
 
