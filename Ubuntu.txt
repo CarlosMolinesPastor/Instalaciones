@@ -1,0 +1,211 @@
+#/bin/bash!
+##Instalacion de Ubuntu:
+
+##Extensiones GNOME:
+#Dash to dock
+#Screenshot Tool
+#caffeine
+#Appindicator and KStatusNotifierItem
+#Auto move
+#open bar
+
+##Add i386 architecture
+sudo dpkg --add-architecture i386 
+
+##Herramientas compilacion
+sudo apt -y install build-essential checkinstall make automake cmake autoconf git git-core kitty curl dpkg wget linux-headers-$(uname -r) wget gpg nala neofetch flatpak gdebi ffmpeg fonts-inconsolata fonts-droid-fallback xfonts-terminus fonts-droid-fallback ttf-bitstream-vera fonts-cantarell fonts-liberation fonts-oflb-asana-math fonts-mathjax ttf-mscorefonts-installer ttf-bitstream-vera fonts-liberation fonts-noto fonts-stix geany cabextract gnome-software-plugin-flatpak gnome-software-plugin-snap
+
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+
+
+## Pacstall
+sudo bash -c "$(curl -fsSL https://pacstall.dev/q/install)"
+
+## Ide
+pacstall -I neovim appimagelauncher-deb balena-etcher-deb  brave-browser-deb davinci-resolve discord krita-app mangohud goverlay  neovim pacstall-gui-git paconvert-git starship-bin teams-for-linux-deb virtualbox-deb vscodium-deb waydroid-deb zed-editor-stable-bin whatsie signal-desktop-deb 
+
+sudo usermod -a -G vboxusers $USER
+
+# sudo apt install mesa-opencl
+
+## Compresion de archivos
+sudo apt -y install unace p7zip-full lzip arj mpack lzma lzop unzip zip bzip2 lhasa cabextract lrzip rzip zpaq kgb xz-utils sharutils
+
+# Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt -y install google-chrome-stable_current_amd64.deb
+rm google-chrome-stable_current_amd64.deb
+
+## Conectar Android
+sudo apt -y install  mtp-tools libmtp-dev libmtp-runtime
+
+## Java
+sudo apt -y install default-jre default-jdk
+# sudo update-alternatives --list java
+# Lo que salga lo pegamos en el archivo environment
+# sudo nano /etc/environment
+# ejemplo: JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+# Recargamos el archivo
+# sudo source /etc/environment
+
+## Homebrew 
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/carlos/.bashrc
+   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/carlos/.zshrc
+   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Rust & silicon
+sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cargo install silicon
+ 
+# Node nvm npm
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+nvm ls-remote
+#nvm install XXXXLast ltsXXXX
+#npm install -g typescript-language-server typescript
+
+## Ruby & colorls
+sudo apt install ruby ruby-dev
+sudo gem install colorls --user
+ 
+## Nerd Fonts
+cd Descargas/
+bash -c  "$(curl -fsSL https://raw.githubusercontent.com/officialrajdeepsingh/nerd-fonts-installer/main/install.sh)"
+ 
+## ssh
+#chmod 700 ~/.ssh
+#chmod 600 ~/.ssh/*
+#eval "$(ssh-agent -s)"
+#ssh-add ~/.ssh/id_rsa
+#ssh-add ~/.ssh/id_ecdsa
+
+## Zsh
+sudo apt-get install zsh
+chsh -s /bin/zsh
+
+## Dependencias de Zsh
+sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+mkdir ~/.oh-my-zsh/custom/plugins/antigen/
+cd ~/.oh-my-zsh/custom/plugins/antigen/
+curl -L git.io/antigen > antigen.zsh
+cd ~
+
+## Vscode dotnet
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+rm -f packages.microsoft.gpg
+wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+sudo apt update
+sudo apt install apt-transport-https
+sudo apt install code
+
+## Unity
+wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
+sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
+sudo apt update
+sudo apt-get install unityhub
+
+## Themes
+
+## WhiteSur
+git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git --depth=1
+cd WhiteSur-gtk-theme  
+./install.sh -t all -m -N stable -s 220 -l --normal --round
+
+## Tela Icon
+git clone https://github.com/vinceliuice/Tela-icon-theme.git
+cd Tela-icon-theme
+./install.sh -a
+
+## Colloid
+
+sudo apt install gnome-themes-extra gtk2-engines-murrine
+git clone https://github.com/vinceliuice/Colloid-gtk-theme.git
+cd Colloid-gtk-theme
+./install.sh -s compact -l
+
+## Iconos Colloid
+git clone https://github.com/vinceliuice/Colloid-icon-theme.git
+cd Colloid-icon-theme
+./install.sh
+
+
+## Stylepack para pps en flatpak
+sudo apt install ostree appstream-util
+git clone https://github.com/refi64/stylepak.git
+cd stylepak
+./stylepak install-user
+./stylepak install-system
+
+## Nafivier convierte cualquier web en app necesitas node instalado
+sudo apt install imagemagick
+npm install -g nativefier
+
+## Mongodb
+sudo apt-get install gnupg curl
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+   --dearmor
+echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt update && sudo apt-get install -y mongodb-org
+sudo systemctl daemon-reload
+sudo systemctl enable mongod
+sudo systemctl start mongod
+#Compass
+wget https://downloads.mongodb.com/compass/mongodb-compass_1.40.4_amd64.deb
+sudo dpkg -i mongodb-compass_1.40.4_amd64.deb
+
+## FLutter
+#Facil
+sudo snap install flutter --classic
+
+## Flet
+sudo apt install python3-pip
+# sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED
+# python 3.12
+sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED
+# pip install flet
+
+## VirtualBox
+wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] http://download.virtualbox.org/virtualbox/debian $(. /etc/os-release && echo "$VERSION_CODENAME") contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
+sudo apt update
+sudo apt install virtualbox-7.1
+wget https://download.virtualbox.org/virtualbox/7.1.0/Oracle_VirtualBox_Extension_Pack-7.1.0.vbox-extpack
+sudo vboxmanage extpack install Oracle_VirtualBox_Extension_Pack-7.1.0.vbox-extpack
+sudo usermod -aG vboxusers $USER
+
+## Temas geany
+sudo apt install geany
+git clone https://github.com/codebrainz/geany-themes.git
+cd geany-themes
+./install
+cd ..
+rm -Rf geany-themes
+
+
+## Inrtellij
+curl -s https://s3.eu-central-1.amazonaws.com/jetbrains-ppa/0xA6E8698A.pub.asc | gpg --dearmor | sudo tee /usr/share/keyrings/jetbrains-ppa-archive-keyring.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/jetbrains-ppa-archive-keyring.gpg] http://jetbrains-ppa.s3-website.eu-central-1.amazonaws.com any main" | sudo tee /etc/apt/sources.list.d/jetbrains-ppa.list > /dev/null
+sudo apt update
+sudo apt install intellij-idea-community
+
+## Xanmod kernel
+wget -qO - https://dl.xanmod.org/archive.key | sudo gpg --dearmor -o /usr/share/keyrings/xanmod-archive-keyring.gpg
+echo 'deb [signed-by=/usr/share/keyrings/xanmod-archive-keyring.gpg] http://deb.xanmod.org releases main' | sudo tee /etc/apt/sources.list.d/xanmod-release.list
+## X99
+# sudo apt update && sudo apt install linux-xanmod-x64v3
+# Consultar el paquete a instalar en https://xanmod.org/
