@@ -1,9 +1,4 @@
-## Pasos preliminares
-## Copias archivo de .ssh de dotfiles a la carpeta .ssh
-## Despues pasamos a instalar ciertas cosas
-
-## yay && various for zsh
-sudo pacman -S --needed base-devel git curl wget zsh fzf ripgrep lsd bat ruby starship zsh-completions zsh-autosuggestions alacritty kitty
+sudo pacman -S --needed base-devel git curl wget zsh fzf ripgrep lsd bat ruby starship zsh-completions zsh-autosuggestions alacritty kitty npm nodejs
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
@@ -41,11 +36,11 @@ source .zshrc
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/*
 eval "$(ssh-agent -s)"
-#ssh-add ~/.ssh/id_ecdsa
-#ssh-add ~/.ssh/github
+ssh-add ~/.ssh/id_ecdsa
+ssh-add ~/.ssh/id_rsa
 
 ## Neovim 
-sudo pacman -S neovim neovim remote
+sudo pacman -S neovim neovim-remote
 ## LazyVim
 mv ~/.config/nvim{,.bak}
 git clone https://github.com/LazyVim/starter ~/.config/nvim
@@ -54,61 +49,23 @@ rm -rf ~/.config/nvim/.git
 sudo pacman -S lazygit silicon
 git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 
-# Node nvm npm
-#wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-##Copiar esto en bashrc o zshrc
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-#nvm ls-remote
-#nvm install XXXXLast ltsXXXX
-#npm install -g typescript-language-server typescript
-
 ## Editores/Ide
 sudo pacman -S visual-studio-code-bin unityhub intellij-idea-community-edition android-studio
 
 ## flutter
-sudo pacman -S chromium jdk17-openjdk jdk-openjdk
-yay -S flutter
-yes | flutter doctor --android-licenses
-## only if not works
-# sudo groupadd flutterusers
-# sudo gpasswd -a $USER flutterusers
-# sudo chown -R :flutterusers /opt/flutter
-# sudo chmod -R g+w /opt/flutter/
+sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin
 
 ## C#
 sudo pacman -S dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools npm nodejs python-pip python-pipx wmctrl
 
 ### Mongo
-yay -S mongodb-bin mongosh-bin mongodb-tools mongodb-comppas
-#### mongodb-comppas en flatpak
+sudo pacman -S mongodb mongodb-compass mongodb-tools mongosh
 
 ### Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-## NVIM VS UNITY
-git clone git@github.com:Domeee/com.cloudedmountain.ide.neovim.git
-## Add the neovim unity package to unity
-## Window > Package Manager > Add package from disk > select package.json
-## Set neovim as external script edtior
-## Edit > Preferences > External Tools > External Script Editor > select Neovim
-## Start an nvim server
-# "/tmp/nvimsocket" is the name of the server and currently hardcoded
-nvim --listen /tmp/nvimsocket
 
-## Sway
-sudo pacman -S swayfx swaybg swayidle swaylock wlroots wl-clipboard waybar wofi kanshi \
-foot mako grim slurp wf-recorder yad wlogout geany mpv mpd mpc \
-imagemagick  xorg-xwayland xdg-desktop-portal-wlr playerctl pastel python-pywal \
-rofi pulsemixer
-yay -S light
-# Opciones sway
-# sudo rm /usr/lib/python3.11/EXTERNALLY-MANAGED
-# sudo rm /usr/lib/python3.12/EXTERNALLY-MANAGED
-# python3 -m pip install --user tendo 
-# python3 -m pip install --user i3ipc
-# java en sway
+# Java en wayland
 sudo nano /etc/environment
 ------- copy ----------------
 _JAVA_AWT_WM_NONREPARENTING=1
@@ -120,52 +77,3 @@ _JAVA_AWT_WM_NONREPARENTING=1
 # echo ".cfg" >> .gitignore
 # config config --local status.showUntrackedFiles no
 #config checkout // nos dice si hay algun problema
-
-## Picom Blur
-blur:
-{
-method = "gaussian";
-size = 20; 
-deviation = 15;
-};
-
-## APPS and more
-yay -S btop cava neofetch noise-suppression-for-voice unimatrix gtop 
-
-Temas
-yay -S kvantum-theme-catppuccin-git catppuccin-gtk-theme-mocha
-cp -R /usr/share/themes/Catppuccin-Mocha-Standard-Pink-Dark/gtk-4.0 ~/.config/gtk-4.0
-flatpak override --user --filesystem=xdg-config/gtk-4.0
-sudo flatpak override --filesystem=xdg-config/gtk-4.0
-
-nano ~/.config/gtk-3.0/settings.ini
-#-------- Paste -------
-[Settings]
-gtk-application-prefer-dark-theme=true
-gtk-theme-name = Catppuccin-Mocha-Standard-Pink-Dark
-gtk-enable-animations=true
-gtk-font-name=Noto Sans 9
-gtk-icon-theme-name=Luv-folders-Dark
-gtk-cursor-theme-name=Qogirr
-gtk-cursor-theme-size=0
-gtk-toolbar-style=GTK_TOOLBAR_ICONS
-gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
-gtk-button-images=0
-gtk-menu-images=1
-gtk-enable-event-sounds=0
-gtk-enable-input-feedback-sounds=0
-gtk-xft-antialias=1
-gtk-xft-hinting=1
-gtk-xft-hintstyle=hintslight
-gtk-xft-rgba=rgb
-#------- End ---------
-
-##Utilizacion kvantum y repintado de java en sway
-sudo nvim /etc/environment
-#-------------- Paste --------------
-#QT_QPA_PLATFORMTHEME=qt5ct
-QT_STYLE_OVERRIDE=kvantum
-EDITOR=nano
-BROWSER=firefox
-_JAVA_AWT_WM_NONREPARENTING=1
-#------------------------------------
