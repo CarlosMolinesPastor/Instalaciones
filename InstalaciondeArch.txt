@@ -1,4 +1,7 @@
-sudo pacman -S --needed base-devel git curl wget zsh fzf ripgrep lsd bat ruby starship zsh-completions zsh-autosuggestions alacritty kitty npm nodejs
+## BASE
+sudo pacman -S --needed base-devel git curl wget zsh fzf ripgrep lsd bat ruby starship alacritty kitty npm nodejs
+
+## YAY
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
@@ -14,15 +17,18 @@ sudo pacman -Syyu
 ## octopi
 sudo pacman -S octopi
 
-## zsh
+## zsh as primary shell
 echo $SHELL
 chsh -s /bin/zsh
-# Close session and re-open
+
+# CLOSE SESSION AND REOPEN
+
 # zsh dependencies
 sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
 mkdir ~/.oh-my-zsh/custom/plugins/antigen/
 cd ~/.oh-my-zsh/custom/plugins/antigen/
 curl -L git.io/antigen > antigen.zsh
@@ -32,31 +38,27 @@ cp ~/zsh/.zshrc ~/.zshrc
 gem install colorls --user-install
 source .zshrc
 
-## ssh
+## SSH ONLY ME NO OTHERS
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/*
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ecdsa
 ssh-add ~/.ssh/id_rsa
 
-## Neovim 
-sudo pacman -S neovim neovim-remote
+## Editores/Ide
+sudo pacman -S visual-studio-code-bin unityhub android-studio neovim neovim-remote
+
 ## LazyVim
 mv ~/.config/nvim{,.bak}
 git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
+
 ## Lazyvim karlinux
 sudo pacman -S lazygit silicon
 git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 
-## Editores/Ide
-sudo pacman -S visual-studio-code-bin unityhub intellij-idea-community-edition android-studio
-
-## flutter
-sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin
-
-## C#
-sudo pacman -S dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools npm nodejs python-pip python-pipx wmctrl
+## flutter java csharp node 
+sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools npm nodejs python-pip python-pipx wmctrl
 
 ### Mongo
 sudo pacman -S mongodb mongodb-compass mongodb-tools mongosh
@@ -71,7 +73,8 @@ sudo nano /etc/environment
 _JAVA_AWT_WM_NONREPARENTING=1
 ----------------------------
 
-## GIT
+## GIT Propio ##
+## NO INSTALAR ##
 # git clone --bare  git@github.com:karlinux47/dotfiles.git $HOME/.cfg
 # alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # echo ".cfg" >> .gitignore
