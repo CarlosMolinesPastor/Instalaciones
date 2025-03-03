@@ -43,7 +43,7 @@ echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
 source ~/.bashrc
 
 echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> ~/.zshrc
-echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.zshrc
 source ~/.zshrc
 
 ### Rust
