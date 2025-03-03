@@ -1,0 +1,69 @@
+##FEDORA 
+
+#visualstudiocode
+
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+
+echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo > /dev/null
+
+dnf check-update
+
+sudo dnf install code -y
+
+### Paquetes Development Java Python
+
+sudo dnf install python3 python3-pip python3-virtualenv nodejs code java-17-openjdk-devel maven zsh intellij-idea-community git fastfetch zsh powerline-fonts neovim python3-neovim ripgrep gnome-tweaks ruby kitty wget curl lsd bat fzf lazygit silicon -y
+
+### zsh
+
+sudo chsh -s $(which zsh) $(whoami)
+
+sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+cd ~
+
+git clone https://github.com/CarlosMolinesPastor/zsh.git
+
+cp ~/zsh/.zshrc ~/.zshrc
+
+gem install colorls --user-install
+
+source .zshrc
+
+### Java
+sudo update-alternatives --config java
+echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> ~/.bashrc
+echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+source ~/.bashrc
+
+echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> ~/.zshrc
+echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
+source ~/.zshrc
+
+### Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+### Python
+pip install numpy pandas requests flask django
+
+### Neovim
+git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
+
+### Kitty
+git clone https://github.com/CarlosMolinesPastor/kitty.git
+cp -R kitty ~/.config/
+
+sudo usermod -a -G vboxusers $(whoami)
+
+### SSH ONLY ME NO OTHERS
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/*
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ecdsa
+ssh-add ~/.ssh/id_rsa
