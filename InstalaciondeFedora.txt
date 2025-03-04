@@ -25,6 +25,11 @@ sudo dnf install intellij-idea-ultimate
 # Lazygit starship
 dnf copr enable markupstart/terminal-stuff
 
+## brave
+sudo dnf install dnf-plugins-core
+sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+sudo dnf install brave-browser  
+
 ### INSTALACION ###
 sudo dnf update && sudo dnf upgrade
 # Sustituir ffmpeg de fedora con rpmfusion
@@ -35,7 +40,7 @@ sudo dnf install libva-intel-driver intel-media-driver
 # Compatibilidad con imagenes iphone
 sudo dnf install libheif libheif-freeworld
 
-sudo dnf install vlc gnome-tweaks gnome-extensions-app gstreamer-plugins* p7zip shotcut kdenlive okular python3 python3-pip python3-virtualenv starship nodejs npm code java-17-openjdk-devel maven zsh git fastfetch zsh powerline-fonts neovim python3-neovim ripgrep gnome-tweaks ruby-devel kitty wget curl lsd bat fzf -y
+sudo dnf install vlc gnome-tweaks gnome-extensions-app gstreamer-plugins* p7zip shotcut kdenlive okular python3 python3-pip python3-virtualenv starship nodejs npm java-17-openjdk-devel maven zsh git fastfetch zsh powerline-fonts neovim python3-neovim ripgrep gnome-tweaks ruby-devel kitty wget curl lsd bat fzf gimp gmic-gimp virtualbox virtualbox-guest-additions variety -y
 
 ### zsh ###
 sudo chsh -s $(which zsh) $(whoami)
@@ -109,3 +114,13 @@ unzip AutoFirma_Linux_Fedora.zip
 sudo rpm install autofirma-1.8.3-1.noarch_FEDORA.rpm
 rm autofirma-1.8.3-1.noarch_FEDORA.rpm
 
+### gimpshop
+git clone https://github.com/cttynul/gimpshop-reloaded.git ~/.gimpshop-temp
+# Elegir version
+#cp -r ~/.gimpshop-temp/. ~/.config/GIMP/2.10
+#cp -r ~/.gimpshop-temp/. ~/.config/GIMP/3.0
+rm -r -f ~/.gimpshop-temp
+
+### starship
+curl -sS https://starship.rs/install.sh | sh
+starship preset pastel-powerline -o ~/.config/starship.toml
