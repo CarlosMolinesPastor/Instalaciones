@@ -99,14 +99,8 @@ git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 git clone https://github.com/CarlosMolinesPastor/kitty.git
 cp -R kitty ~/.config/
 
+### Virtualbox ###
 sudo usermod -a -G vboxusers $(whoami)
-
-### SSH ONLY ME NO OTHERS
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/*
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ecdsa
-ssh-add ~/.ssh/id_rsa
 
 ### Autofirma ###
 wget https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip
@@ -124,3 +118,11 @@ rm -r -f ~/.gimpshop-temp
 ### starship
 curl -sS https://starship.rs/install.sh | sh
 starship preset pastel-powerline -o ~/.config/starship.toml
+
+### SSH ONLY ME NO OTHERS
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/*
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ecdsa
+ssh-add ~/.ssh/id_rsa
+
