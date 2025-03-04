@@ -115,6 +115,13 @@ git clone https://github.com/cttynul/gimpshop-reloaded.git ~/.gimpshop-temp
 #cp -r ~/.gimpshop-temp/. ~/.config/GIMP/3.0
 rm -r -f ~/.gimpshop-temp
 
+### spotube
+sudo dnf install mpv-libs libappindicator mdns-scan mpv-devel
+sudo ln -s /usr/lib64/libmpv.so /usr/lib64/libmpv.so.1
+wget https://github.com/KRTirtho/spotube/releases/latest/download/Spotube-linux-x86_64.rpm
+sudo rpm -ivh Spotube-linux-x86_64.rpm --nodeps
+rm ./Spotube-linux-x86_64.rpm
+
 ### starship
 curl -sS https://starship.rs/install.sh | sh
 starship preset pastel-powerline -o ~/.config/starship.toml
