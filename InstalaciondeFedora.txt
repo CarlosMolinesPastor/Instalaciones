@@ -1,34 +1,61 @@
 ##FEDORA 
+# Muchos de los hacks que hay aqui los podemos sustituir instalando de inicio NOBARA que es una distro que ya viene 'vitaminada'
 
-#visualstudiocode
+### Actualizacion ###
+sudo dnf update && sudo dnf upgrade
 
+### REPOSITORIOS ###
+# RPM Fusion
+sudo dnf install \
+https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+# Para que aparezca en software manager
+sudo dnf4 update @core
+
+# visualstudiocode
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-
 echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo > /dev/null
-
 dnf check-update
-
 sudo dnf install code -y
 
-### Paquetes Development Java Python
+# Intellij
+sudo dnf copr enable coder966/intellij-idea-ultimate
+sudo dnf install intellij-idea-ultimate
 
-sudo dnf install python3 python3-pip python3-virtualenv nodejs code java-17-openjdk-devel maven zsh intellij-idea-community git fastfetch zsh powerline-fonts neovim python3-neovim ripgrep gnome-tweaks ruby kitty wget curl lsd bat fzf lazygit silicon -y
+# Lazygit starship
+dnf copr enable markupstart/terminal-stuff
 
-### zsh
+### INSTALACION ###
+sudo dnf update && sudo dnf upgrade
+# Sustituir ffmpeg de fedora con rpmfusion
+sudo dnf swap ffmpeg-free ffmpeg --allowerasing
+sudo dnf4 update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
+# Intel Accel 3D
+sudo dnf install libva-intel-driver intel-media-driver
+# Compatibilidad con imagenes iphone
+sudo dnf install libheif libheif-freeworld
 
+sudo dnf install vlc gnome-tweaks gnome-extensions-app gstreamer-plugins* p7zip shotcut kdenlive okular python3 python3-pip python3-virtualenv starship nodejs npm code java-17-openjdk-devel maven zsh git fastfetch zsh powerline-fonts neovim python3-neovim ripgrep gnome-tweaks ruby-devel kitty wget curl lsd bat fzf -y
+
+### zsh ###
 sudo chsh -s $(which zsh) $(whoami)
-
+# Oh my zsh con themes resaltado de syntaxis auto suggestions y fzf-tab
 sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
 cd ~
+# Configuracion propia
 git clone https://github.com/CarlosMolinesPastor/zsh.git
 cp ~/zsh/.zshrc ~/.zshrc
+# Instalacion de colorls con soporte de iconos para el terminal
 gem install colorls --user-install
 source .zshrc
 
-### NerdFonts
+### NerdFonts ###
+
+# Modo '1;
 cd ~
 mkdir build
 cd build
@@ -38,26 +65,32 @@ chmod +x nerdinstall.sh
 ./nerdinstall.sh
 rm -Rf build
 
-### Java
+# Modo '2'
+bash -c  "$(curl -fsSL https://raw.githubusercontent.com/officialrajdeepsingh/nerd-fonts-installer/main/install.sh)"
+
+### Java17 ###
 sudo update-alternatives --config java
 echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> ~/.bashrc
 echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
 source ~/.bashrc
-
 echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> ~/.zshrc
 echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.zshrc
 source ~/.zshrc
 
-### Rust
+### Rust ###
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cargo install silicon
+rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy
+rustup component add rust-analyzer
 
-### Python
+### Python ###
+sudo dnf install python3-devel python3-virtualenv python3-pandas python3-numpy
 pip install numpy pandas requests flask django
 
-### Neovim
+### Neovim ###
 git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 
-### Kitty
+### Kitty ###
 git clone https://github.com/CarlosMolinesPastor/kitty.git
 cp -R kitty ~/.config/
 
@@ -69,3 +102,10 @@ chmod 600 ~/.ssh/*
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ecdsa
 ssh-add ~/.ssh/id_rsa
+
+### Autofirma ###
+wget https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip
+unzip AutoFirma_Linux_Fedora.zip
+sudo rpm install autofirma-1.8.3-1.noarch_FEDORA.rpm
+rm autofirma-1.8.3-1.noarch_FEDORA.rpm
+
