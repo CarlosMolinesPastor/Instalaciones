@@ -69,10 +69,18 @@ rm -rf ~/.config/nvim/.git
 sudo pacman -S lazygit silicon
 git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 
-## flutter java csharp node 
-sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin npm nodejs python-pip python-pipx wmctrl
+### Kitty ###
+git clone https://github.com/CarlosMolinesPastor/kitty.git
+cp -R kitty ~/.config/
+
+## flutter java csharp node python 
+sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin npm nodejs python-pip python-pipx python3-devel python3-virtualenv python3-pandas python3-numpy wmctrl 
 C#
 sudo pacman -S dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools 
+
+### JAva
+archlinux-java status
+archlinux-java set ""
 
 ### Mongo
 sudo pacman -S mongodb mongodb-compass mongodb-tools mongosh
