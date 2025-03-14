@@ -19,13 +19,17 @@ Include = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf > /de
 sudo pacman -Syyu
 
 ## various
-sudo pacman -S octopi virtualbox-host-dkms	virtualbox 	virtualbox-guest-iso  virtualbox-guest-utils 
+sudo pacman -S octopi virtualbox-host-dkms virtualbox virtualbox-guest-iso virtualbox-guest-utils
+sudo usermod -a -G vboxusers $(whoami)
 
 ## zsh as primary shell
 echo $SHELL
 chsh -s /bin/zsh
 
 # CLOSE SESSION AND REOPEN
+
+##Starship
+starship preset pastel-powerline -o ~/.config/starship.toml
 
 # zsh dependencies
 sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
@@ -66,13 +70,17 @@ sudo pacman -S lazygit silicon
 git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim
 
 ## flutter java csharp node 
-sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools npm nodejs python-pip python-pipx wmctrl
+sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin npm nodejs python-pip python-pipx wmctrl
+C#
+sudo pacman -S dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools 
 
 ### Mongo
 sudo pacman -S mongodb mongodb-compass mongodb-tools mongosh
 
 ### Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy
+rustup component add rust-analyzer
 
 # Java en wayland
 sudo nano /etc/environment
