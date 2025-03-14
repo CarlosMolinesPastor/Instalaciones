@@ -19,7 +19,9 @@ Include = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf > /de
 sudo pacman -Syyu
 
 ## various
-sudo pacman -S octopi virtualbox-host-dkms virtualbox virtualbox-guest-iso virtualbox-guest-utils brave-bin cups
+sudo pacman -S octopi virtualbox-host-dkms virtualbox virtualbox-guest-iso virtualbox-guest-utils brave-bin cups okular nextcloud-client
+sudo pacman -S libreoffice-fresh libreoffice-fresh-es onlyoffice-bin
+sudo pacman -S gimp gimp-extras gimp-plugin-gmic gimp-elsamuko-git
 sudo usermod -a -G vboxusers $(whoami)
 
 ## zsh as primary shell
