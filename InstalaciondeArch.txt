@@ -74,7 +74,7 @@ git clone https://github.com/CarlosMolinesPastor/kitty.git
 cp -R kitty ~/.config/
 
 ## flutter java csharp node python 
-sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin npm nodejs python-pip python-pipx python3-devel python3-virtualenv python3-pandas python3-numpy wmctrl 
+sudo pacman -S chromium jdk17-openjdk jdk-openjdk flutter-bin npm nodejs python-pip python-pipx python-virtualenv python-pandas python-numpy wmctrl 
 C#
 sudo pacman -S dotnet-runtime dotnet-targeting-pack dotnet-sdk dotnet-runtime dotnet-host dotnet-source-built-artifacts mono mono-msbuild mono-addins mono-tools 
 
@@ -102,3 +102,20 @@ chmod 600 ~/.ssh/*
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ecdsa
 ssh-add ~/.ssh/id_rsa
+
+## Acer Nitro AN515-57
+
+## Auto CPU FREQ
+sudo pacman -S auto-cpufreq
+sudo systemctl enable auto-cpufreq
+sudo systemctl start auto-cpufreq
+## nbfc-linux (fans)
+yay -S nbfc-linux
+nbfc config -r
+sudo nbfc config -s "Acer Nitro AN515-57"
+sudo nbfc config -a "Acer Nitro AN515-57"
+## Battery threshold
+yay -S acer-wmi-battery-dkms
+## Edit
+sudo nvim '/usr/share/nbfc/configs/Acer Nitro AN515-57.json'
+Change de line that have 17 to number 81
