@@ -90,6 +90,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup toolchain install nightly --allow-downgrade --profile minimal --component clippy
 rustup component add rust-analyzer
 
+### Theme Adwaita
+sudo pacman -S adw-gtk-theme
+
 # Java en wayland
 sudo nano /etc/environment
 ------- copy ----------------
