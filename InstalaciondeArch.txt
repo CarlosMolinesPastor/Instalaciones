@@ -1,5 +1,5 @@
 ## BASE
-sudo pacman -S --needed base-devel git curl wget zsh fzf ripgrep lsd bat ruby starship alacritty kitty npm nodejs
+sudo pacman -S --needed base-devel git curl wget zsh fzf ripgrep lsd bat ruby starship alacritty kitty npm nodejs firefox firefox-i18n-es-es 
 
 ## YAY
 git clone https://aur.archlinux.org/yay.git
@@ -19,7 +19,7 @@ Include = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf > /de
 sudo pacman -Syyu
 
 ## various
-sudo pacman -S octopi virtualbox-host-dkms virtualbox virtualbox-guest-iso virtualbox-guest-utils
+sudo pacman -S octopi virtualbox-host-dkms virtualbox virtualbox-guest-iso virtualbox-guest-utils brave-bin cups
 sudo usermod -a -G vboxusers $(whoami)
 
 ## zsh as primary shell
