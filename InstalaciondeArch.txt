@@ -10,12 +10,13 @@ yay --version
 ## Chaotic only Arch no Manjaro
 sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 sudo pacman-key --lsign-key 3056513887B78AEB
-sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
 echo "[chaotic-aur] \nInclude = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf > /dev/null
 sudo pacman -Syyu
 
-## octopi
-sudo pacman -S octopi
+## various
+sudo pacman -S octopi virtualbox-host-dkms	virtualbox 	virtualbox-guest-iso  virtualbox-guest-utils 
 
 ## zsh as primary shell
 echo $SHELL
@@ -38,13 +39,6 @@ cp ~/zsh/.zshrc ~/.zshrc
 gem install colorls --user-install
 source .zshrc
 
-## SSH ONLY ME NO OTHERS
-chmod 700 ~/.ssh
-chmod 600 ~/.ssh/*
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ecdsa
-ssh-add ~/.ssh/id_rsa
-
 ## Editores/Ide
 sudo pacman -S visual-studio-code-bin unityhub android-studio neovim neovim-remote
 
@@ -66,17 +60,15 @@ sudo pacman -S mongodb mongodb-compass mongodb-tools mongosh
 ### Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-
 # Java en wayland
 sudo nano /etc/environment
 ------- copy ----------------
 _JAVA_AWT_WM_NONREPARENTING=1
 ----------------------------
 
-## GIT Propio ##
-## NO INSTALAR ##
-# git clone --bare  git@github.com:karlinux47/dotfiles.git $HOME/.cfg
-# alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-# echo ".cfg" >> .gitignore
-# config config --local status.showUntrackedFiles no
-#config checkout // nos dice si hay algun problema
+## SSH ONLY ME NO OTHERS
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/*
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ecdsa
+ssh-add ~/.ssh/id_rsa
