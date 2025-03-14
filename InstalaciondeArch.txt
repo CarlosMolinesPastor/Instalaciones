@@ -42,6 +42,17 @@ cp ~/zsh/.zshrc ~/.zshrc
 gem install colorls --user-install
 source .zshrc
 
+### NerdFonts ###
+# Modo '1;
+cd ~
+mkdir build
+cd build
+git clone https://github.com/CarlosMolinesPastor/nerdfonts.git
+cd nerdfonts
+chmod +x nerdinstall.sh
+./nerdinstall.sh
+rm -Rf build
+
 ## Editores/Ide
 sudo pacman -S visual-studio-code-bin unityhub android-studio neovim neovim-remote
 
