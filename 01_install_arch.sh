@@ -49,9 +49,8 @@ install_acernitro5() {
   nbfc config -r
   sudo nbfc config -s "Acer Nitro AN515-57"
   sudo nbfc config -a "Acer Nitro AN515-57"
-  ## Editar a mano el fichero de configuracion de nbfc
-  #sudo nvim '/usr/share/nbfc/configs/Acer Nitro AN515-57.json'
-  #Change de line that have 17 to number 81
+  sudo cp '/usr/share/nbfc/configs/Acer Nitro AN515-57.json' '/usr/share/nbfc/configs/Acer Nitro AN515-57.json.bak'
+  sudo sed -i 's/17/81/g' '/usr/share/nbfc/configs/Acer Nitro AN515-57.json'
 }
 
 chris_linutil() {

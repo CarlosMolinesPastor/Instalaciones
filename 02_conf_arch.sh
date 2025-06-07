@@ -39,11 +39,10 @@ install_zsh() {
   git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
   cd ~
   git clone https://github.com/CarlosMolinesPastor/zsh.git
-  cp ~/zsh/.zshrc ~/.zshrc
-  rm -rf ~/zsh
-  source .zshrc
+  cp zsh/.zshrc ~/.zshrc
+  rm -rf zsh
   echo "ZSH y Oh My ZSH instalados y configurados"
-  echo ""
+  read -p "Para aplicar los cambios, cierra y vuelve a abrir la terminal o ejecuta 'source ~/.zshrc'. Pulsa una tecla para continuar"
 }
 
 install_lazyvim() {
