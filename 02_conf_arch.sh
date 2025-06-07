@@ -16,12 +16,23 @@ install_nerdfonts() {
 }
 
 install_zsh() {
+  current_shell=$(basename "$SHELL")
+  ohmyzsh_dir="$HOME/.oh-my-zsh"
   read -p "Instalando ZSH y configurando Oh My ZSH... pulsa una tecla para continuar"
-  echo $SHELL
-  chsh -s /bin/zsh
+  if [ "$current_shell" = "zsh" ]; then
+    echo "Ya estás usando zsh."
+  else
+    echo "Cambiando shell a zsh..."
+    chsh -s "$(which zsh)"
+  fi
+
+  if [ -d "$ohmyzsh_dir" ]; then
+    echo "Oh My Zsh ya está instalado en $ohmyzsh_dir."
+  else
+    echo "Instalando Oh My Zsh..."
+    sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+  fi
   starship preset pastel-powerline -o ~/.config/starship.toml
-  gem install colorls --user-install
-  sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
   git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions

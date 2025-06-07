@@ -72,6 +72,9 @@ sleep 2s
 sudo pacman -Syyu --noconfirm
 echo "Sistema actualizado"
 echo ""
+## Shell y Oh My Zsh
+current_shell=$(basename "$SHELL")
+ohmyzsh_dir="$HOME/.oh-my-zsh"
 while true; do
   clear
   echo "MENU DE INSTALACION DE ARCHLINUX"
@@ -105,8 +108,18 @@ while true; do
     ;;
   0)
     echo "Saliendo del instalador..."
-    chsh -s /bin/zsh
-    sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+    if [ "$current_shell" = "zsh" ]; then
+      echo "Ya estás usando zsh."
+    else
+      echo "Cambiando shell a zsh..."
+      chsh -s "$(which zsh)"
+    fi
+    if [ -d "$ohmyzsh_dir" ]; then
+      echo "Oh My Zsh ya está instalado en $ohmyzsh_dir."
+    else
+      echo "Instalando Oh My Zsh..."
+      sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+    fi
     break
     exit 0
     ;;
