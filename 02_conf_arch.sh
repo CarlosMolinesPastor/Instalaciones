@@ -224,6 +224,25 @@ setup_zed() {
   fi
 }
 
+setup_fzf() {
+  if confirm "¿Deseas instalar FZF manualmente desde GitHub?"; then
+    log "Instalando FZF desde el repositorio oficial..."
+
+    if [ -d "$HOME/.fzf" ]; then
+      warning "Ya existe un directorio ~/.fzf, omitiendo clonación"
+    else
+      git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf || error "Falló al clonar FZF"
+    fi
+
+    ~/.fzf/install --key-bindings --completion --no-update-rc || warning "Falló al ejecutar el instalador de FZF"
+    
+    success "FZF instalado correctamente"
+    log "Recuerda verificar que el archivo ~/.fzf.zsh esté siendo cargado desde tu .zshrc"
+  else
+    warning "Instalación de FZF omitida por el usuario"
+  fi
+}
+
 show_menu() {
   while true; do
     clear
@@ -237,6 +256,7 @@ show_menu() {
     echo -e "║ 5. Configurar SSH (solo karlinux)    ║"
     echo -e "║ 6. Configurar Java para Wayland      ║"
     echo -e "║ 7. Configurar Zed Editor             ║"
+    echo -e "║ 8. Instalar FZF manualmente          ║"
     echo -e "║ 0. Salir                             ║"
     echo -e "╚══════════════════════════════════════╝${NC}"
     echo -e "${YELLOW}Registro de configuración: $LOG_FILE${NC}"
@@ -250,6 +270,7 @@ show_menu() {
     5) setup_ssh ;;
     6) setup_java ;;
     7) setup_zed ;;
+    8) setup_fzf ;;
     0)
       log "Configuración completada. Reinicia tu sesión para aplicar todos los cambios."
       exit 0
