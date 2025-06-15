@@ -243,6 +243,33 @@ setup_fzf() {
   fi
 }
 
+install_neovim_manually() {
+  if confirm "¿Instalar Neovim manualmente desde GitHub?"; then
+    log "Descargando Neovim..."
+
+    cd /tmp || error "No se pudo acceder al directorio /tmp"
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz || error "Falló la descarga de Neovim"
+
+    log "Eliminando instalaciones anteriores en /opt/nvim-linux64..."
+    sudo rm -rf /opt/nvim-linux64
+
+    log "Extrayendo Neovim en /opt..."
+    sudo tar -C /opt -xzf nvim-linux64.tar.gz || error "Falló al extraer Neovim"
+
+    # Agrega al PATH si no está ya presente
+    if ! grep -q "/opt/nvim-linux64/bin" ~/.bashrc && ! grep -q "/opt/nvim-linux64/bin" ~/.zshrc; then
+      log "Agregando Neovim al PATH del usuario..."
+      echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.bashrc
+      echo 'export PATH="$PATH:/opt/nvim-linux64/bin"' >> ~/.zshrc
+      success "Neovim agregado al PATH. Reinicia tu terminal o ejecuta 'source ~/.zshrc'"
+    else
+      warning "Neovim ya estaba en el PATH del usuario"
+    fi
+
+    success "Neovim instalado correctamente en /opt/nvim-linux64"
+  fi
+}
+
 show_menu() {
   while true; do
     clear
@@ -257,6 +284,7 @@ show_menu() {
     echo -e "║ 6. Configurar Java para Wayland      ║"
     echo -e "║ 7. Configurar Zed Editor             ║"
     echo -e "║ 8. Instalar FZF manualmente          ║"
+    echo -e "║ 9. Instalar Neovim manualmente       ║"
     echo -e "║ 0. Salir                             ║"
     echo -e "╚══════════════════════════════════════╝${NC}"
     echo -e "${YELLOW}Registro de configuración: $LOG_FILE${NC}"
@@ -271,6 +299,7 @@ show_menu() {
     6) setup_java ;;
     7) setup_zed ;;
     8) setup_fzf ;;
+    9) install_neovim_manually ;;
     0)
       log "Configuración completada. Reinicia tu sesión para aplicar todos los cambios."
       exit 0
