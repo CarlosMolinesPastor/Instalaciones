@@ -1,5 +1,7 @@
 # Instalaciones
 
+### (Bajo desarrollo continuo)
+
 Repositorio con los pasos de instalaciones propias
 
 Los archivos de instalacion de archlinux son scripts de bash con la instalacion por un lado y por la otra con la configuracion de varias partes del sistema.
@@ -8,7 +10,12 @@ Se puede descargar con el comando:
 
 ```bash
 git clone https://github.com/CarlosMolinesPastor/Instalaciones.git
-cd Instalaciones
+```
+
+Para archlinux, que es el mas evolucionado de los scripts:
+
+```bash
+cd Instalaciones/archlinux
 chmod +x *.sh
 # Primero se realiza la instalacion de archlinux, que es un script con los programas y aplicaciones necesarias.
 ./01_install_arch.sh
