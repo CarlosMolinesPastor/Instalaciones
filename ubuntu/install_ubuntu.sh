@@ -23,7 +23,7 @@ declare -A PACKAGE_MAP=(
   ["system"]="synaptic cups nextcloud-desktop nala gdebi"
   ["video"]="kodi kodi-inputstream-adaptive gimp gmic ffmpeg vlc"
   ["internet"]="brave-browser"
-  ["dev"]="code lazygit default-jdk flutter npm nodejs python3-pip python3-pipx python3-virtualenv python3-pandas python3-numpy"
+  ["dev"]="code default-jdk npm nodejs python3-pip python3-pipx python3-virtualenv python3-pandas python3-numpy"
   ["virtualization"]="virtualbox virtualbox-ext-pack"
   ["misc"]="wmctrl fonts-inconsolata fonts-droid-fallback xfonts-terminus fonts-cantarell fonts-liberation ttf-mscorefonts-installer"
   ["pacstall-dev"]="android-studio neovim zed-editor-stable-bin"
@@ -84,6 +84,43 @@ update_system() {
   success "Sistema actualizado y dependencias instaladas"
 }
 
+install_lazygit() {
+  confirm "¿Instalar LazyGit?" || return
+  
+  log "Instalando LazyGit..."
+  LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+  tar xf lazygit.tar.gz lazygit
+  sudo install lazygit /usr/local/bin
+  rm lazygit.tar.gz lazygit
+  
+  success "LazyGit ${LAZYGIT_VERSION} instalado correctamente"
+}
+
+install_flutter() {
+  confirm "¿Instalar Flutter SDK?" || return
+  
+  log "Instalando Flutter SDK..."
+  FLUTTER_DIR="$HOME/development"
+  
+  mkdir -p "$FLUTTER_DIR"
+  
+  if [[ ! -d "$FLUTTER_DIR/flutter" ]]; then
+    git clone https://github.com/flutter/flutter.git -b stable "$FLUTTER_DIR/flutter"
+  fi
+  
+  if ! grep -q "flutter/bin" "$HOME/.bashrc"; then
+    echo 'export PATH="$PATH:$HOME/development/flutter/bin"' >> "$HOME/.bashrc"
+    source "$HOME/.bashrc"
+  fi
+  
+  sudo apt install -y clang cmake ninja-build libgtk-3-dev
+  
+  flutter doctor
+  
+  success "Flutter SDK instalado en $FLUTTER_DIR/flutter"
+}
+
 install_pacstall() {
   if ! command -v pacstall &>/dev/null; then
     log "Instalando Pacstall..."
@@ -105,27 +142,24 @@ setup_repositories() {
 
   # Visual Studio Code
   if [[ ! -f /etc/apt/trusted.gpg.d/packages.microsoft.gpg ]]; then
-    sudo install -D -o root -g root -m 644 \
-      <(wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor) \
-      /etc/apt/trusted.gpg.d/packages.microsoft.gpg
-    echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+    sudo sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
   fi
 
   # Brave
   if [[ ! -f /etc/apt/trusted.gpg.d/brave-browser-release.gpg ]]; then
-    sudo curl -fsSLo /etc/apt/trusted.gpg.d/brave-browser-release.gpg https://brave-browser-apt-release.s3.brave.com/brave-core.asc
-    echo "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSLo /etc/apt/trusted.gpg.d/brave-browser-release.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/brave-browser-release.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
   fi
 
-  # VirtualBox
-  if [[ ! -f /etc/apt/trusted.gpg.d/virtualbox.gpg ]]; then
-    wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --output /etc/apt/trusted.gpg.d/virtualbox.gpg
-    echo "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
-  fi
-
-  # LazyGit (solo en Ubuntu)
+  # VirtualBox (solo para Ubuntu)
   if [[ "$DISTRO_NAME" == "Ubuntu" ]]; then
-    sudo add-apt-repository -y ppa:lazygit-team/release || warning "No se pudo añadir el PPA de LazyGit"
+    if [[ ! -f /etc/apt/trusted.gpg.d/oracle-virtualbox.gpg ]]; then
+      wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --output /etc/apt/trusted.gpg.d/oracle-virtualbox.gpg
+      echo "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
+    fi
   fi
 
   sudo apt update
@@ -204,9 +238,11 @@ show_menu() {
     echo -e "║ 5. Instalar paquetes especiales (Pacstall)   ║"
     echo -e "║ 6. Instalar todos los paquetes (apt + pac)   ║"
     echo -e "║ 7. Configurar Brave Browser                  ║"
-    echo -e "║ 8. Configurar ZSH y Oh My ZSH                ║"
-    echo -e "║ 9. Limpiar sistema                           ║"
-    echo -e "║ 0. Salir                                     ║"
+    echo -e "║ 8. Configurar ZSH y Oh My ZSH               ║"
+    echo -e "║ 9. Instalar Flutter SDK                     ║"
+    echo -e "║ 10. Instalar LazyGit                        ║"
+    echo -e "║ 11. Limpiar sistema                         ║"
+    echo -e "║ 0. Salir                                    ║"
     echo -e "╚══════════════════════════════════════════════╝${NC}"
     echo -e "${YELLOW}Distribución: ${DISTRO_NAME} ${DISTRO_VERSION}"
     echo -e "Log: $LOG_FILE${NC}"
@@ -231,7 +267,9 @@ show_menu() {
     6) install_all_packages ;;
     7) configure_brave ;;
     8) setup_zsh ;;
-    9) cleanup ;;
+    9) install_flutter ;;
+    10) install_lazygit ;;
+    11) cleanup ;;
     0)
       log "¡Instalación finalizada!"
       exit 0
