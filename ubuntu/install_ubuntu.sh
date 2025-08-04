@@ -173,7 +173,154 @@ install_liquorix_kernel() {
   success "Kernel Liquorix instalado. Reinicia para activarlo."
 }
 
-# ─── Funciones existentes (actualizadas) ────────────────────
+install_pacstall() {
+  confirm "¿Instalar/Actualizar Pacstall?" || return
+  
+  log "Instalando Pacstall..."
+  sudo bash -c "$(curl -fsSL https://git.io/JsADh || wget -q https://git.io/JsADh -O -)"
+  
+  success "Pacstall instalado correctamente"
+}
+
+setup_repositories() {
+  confirm "¿Configurar repositorios adicionales?" || return
+  
+  log "Añadiendo repositorios..."
+  
+  # Brave Browser
+  sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+  
+  # VS Code
+  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/vscode.gpg >/dev/null
+  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/vscode.gpg] https://packages.microsoft.com/repos/vscode stable main" | sudo tee /etc/apt/sources.list.d/vscode.list
+  
+  # Node.js
+  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+  
+  sudo apt update
+  success "Repositorios configurados correctamente"
+}
+
+install_package_group() {
+  local group=$1
+  [[ -z "${PACKAGE_MAP[$group]:-}" ]] && error "Grupo de paquetes no válido: $group"
+  
+  if [[ $group == pacstall-* ]]; then
+    log "Instalando grupo $group con Pacstall..."
+    for pkg in ${PACKAGE_MAP[$group]}; do
+      confirm "¿Instalar $pkg?" && pacstall -I "$pkg"
+    done
+  else
+    log "Instalando grupo $group con apt..."
+    sudo apt install -y ${PACKAGE_MAP[$group]}
+  fi
+  
+  success "Paquetes del grupo $group instalados"
+}
+
+install_all_packages() {
+  confirm "¿Instalar TODOS los paquetes? Esto puede llevar tiempo." || return
+  
+  for group in "${!PACKAGE_MAP[@]}"; do
+    if [[ $group == pacstall-* ]]; then
+      for pkg in ${PACKAGE_MAP[$group]}; do
+        pacstall -I "$pkg"
+      done
+    else
+      sudo apt install -y ${PACKAGE_MAP[$group]}
+    fi
+  done
+  
+  success "Todos los paquetes instalados"
+}
+
+configure_brave() {
+  confirm "¿Configurar Brave Browser?" || return
+  
+  log "Configurando Brave..."
+  sudo apt install -y brave-browser
+  
+  # Configuración recomendada
+  if [[ -f "$USER_HOME/.config/BraveSoftware/Brave-Browser/Default/Preferences" ]]; then
+    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' "$USER_HOME/.config/BraveSoftware/Brave-Browser/Default/Preferences"
+    sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' "$USER_HOME/.config/BraveSoftware/Brave-Browser/Default/Preferences"
+  fi
+  
+  success "Brave configurado. Ejecuta 'brave-browser' para iniciarlo."
+}
+
+setup_zsh() {
+  confirm "¿Configurar ZSH y Oh My ZSH?" || return
+  
+  log "Instalando ZSH..."
+  sudo apt install -y zsh
+  
+  log "Instalando Oh My ZSH..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  
+  # Plugins recomendados
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  
+  # Configuración básica
+  sed -i 's/^ZSH_THEME=.*/ZSH_THEME="agnoster"/' ~/.zshrc
+  sed -i 's/^plugins=.*/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
+  
+  # Cambiar shell por defecto
+  chsh -s $(which zsh)
+  
+  success "ZSH y Oh My ZSH configurados. Reinicia la terminal."
+}
+
+install_flutter() {
+  confirm "¿Instalar Flutter SDK?" || return
+  
+  log "Instalando dependencias..."
+  sudo apt install -y clang cmake ninja-build pkg-config libgtk-3-dev
+  
+  log "Descargando Flutter..."
+  cd "$USER_HOME" || error "No se pudo cambiar a $USER_HOME"
+  git clone https://github.com/flutter/flutter.git -b stable
+  flutter precache
+  flutter doctor
+  
+  # Agregar a PATH
+  echo 'export PATH="$PATH:$HOME/flutter/bin"' >> "$USER_HOME/.bashrc"
+  echo 'export PATH="$PATH:$HOME/flutter/bin"' >> "$USER_HOME/.zshrc"
+  
+  success "Flutter instalado. Ejecuta 'flutter doctor' para verificar."
+}
+
+install_lazygit() {
+  confirm "¿Instalar LazyGit?" || return
+  
+  log "Instalando LazyGit..."
+  LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+  tar xf lazygit.tar.gz lazygit
+  sudo install lazygit /usr/local/bin
+  rm lazygit lazygit.tar.gz
+  
+  success "LazyGit instalado. Ejecuta 'lazygit' para usarlo."
+}
+
+cleanup() {
+  confirm "¿Limpiar paquetes innecesarios y caché?" || return
+  
+  log "Limpiando sistema..."
+  sudo apt autoremove -y
+  sudo apt clean
+  sudo rm -rf /var/cache/apt/archives/*
+  sudo rm -rf /tmp/*
+  
+  if command -v pacstall &>/dev/null; then
+    pacstall -Rc
+  fi
+  
+  success "Limpieza completada"
+}
+
 update_system() {
   log "Actualizando sistema..."
   sudo apt update && sudo apt full-upgrade -y || error "Falló la actualización"
@@ -187,8 +334,6 @@ update_system() {
 
   success "Sistema actualizado y dependencias instaladas"
 }
-
-# ... (resto de funciones existentes se mantienen igual) ...
 
 # ─── Menú ───────────────────────────────────────────────────
 show_menu() {
