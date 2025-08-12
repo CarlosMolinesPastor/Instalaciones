@@ -105,10 +105,8 @@ install_python() {
 install_java() {
     info "Configurando Java (Temurin 17)..."
     
-    # Instalar dependencias
     sudo apt install -y wget apt-transport-https gpg
     
-    # Añadir repositorio de Temurin
     if [ ! -f /etc/apt/trusted.gpg.d/adoptium.gpg ]; then
         wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/adoptium.gpg || return 1
         echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list || return 1
@@ -117,11 +115,9 @@ install_java() {
     sudo apt update || return 1
     sudo apt install -y temurin-17-jdk junit || return 1
     
-    # Configurar Java alternativo
     info "Configurando Java alternativo..."
     sudo update-alternatives --config java
     
-    # Configurar JAVA_HOME
     JAVA_HOME_PATH=$(update-alternatives --list java | grep temurin-17 | sed 's|/bin/java||')
     echo "export JAVA_HOME=$JAVA_HOME_PATH" >> ~/.bashrc
     echo "export JAVA_HOME=$JAVA_HOME_PATH" >> ~/.zshrc
@@ -172,7 +168,6 @@ install_docker() {
     
     sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release || return 1
     
-    # Añadir clave GPG de Docker
     if [ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]; then
         curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg || return 1
         echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null || return 1
@@ -181,7 +176,6 @@ install_docker() {
     sudo apt update || return 1
     sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin || return 1
     
-    # Añadir usuario al grupo docker
     sudo usermod -aG docker $USER || return 1
     sudo systemctl enable docker || return 1
     
@@ -208,14 +202,12 @@ install_neovim() {
     
     sudo apt install -y neovim || return 1
     
-    # Hacer backup de configuraciones existentes
     info "Haciendo backup de configuraciones existentes de Neovim..."
     [ -d ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.bak
     [ -d ~/.local/share/nvim ] && mv ~/.local/share/nvim ~/.local/share/nvim.bak
     [ -d ~/.local/state/nvim ] && mv ~/.local/state/nvim ~/.local/state/nvim.bak
     [ -d ~/.cache/nvim ] && mv ~/.cache/nvim ~/.cache/nvim.bak
     
-    # Clonar configuración personalizada
     git clone https://github.com/CarlosMolinesPastor/nvim.git ~/.config/nvim || return 1
     
     success "Neovim instalado y configurado correctamente"
@@ -272,30 +264,24 @@ install_ollama() {
 configure_zsh() {
     info "Configurando Zsh y herramientas de terminal..."
     
-    # Instalar dependencias
     sudo apt install -y zsh fzf ripgrep lsd bat || return 1
     
-    # Cambiar shell a Zsh
     if [ "$SHELL" != "/usr/bin/zsh" ]; then
         info "Cambiando shell a Zsh..."
         sudo chsh -s /usr/bin/zsh $USER || return 1
     fi
     
-    # Instalar Starship prompt
     curl -sS https://starship.rs/install.sh | sh || return 1
     starship preset pastel-powerline -o ~/.config/starship.toml || warning "Error al configurar Starship, pero se instaló correctamente"
     
-    # Instalar Oh My Zsh y plugins
     sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" "" --unattended || return 1
     
-    # Plugins de Zsh
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting || return 1
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || return 1
     git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab || return 1
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf || return 1
     ~/.fzf/install --key-bindings --completion --no-update-rc || return 1
     
-    # Configuración personalizada de Zsh
     git clone https://github.com/CarlosMolinesPastor/zsh.git ~/zsh-config-temp || return 1
     cp ~/zsh-config-temp/.zshrc ~/.zshrc || return 1
     rm -rf ~/zsh-config-temp || warning "Error al limpiar archivos temporales"
@@ -303,25 +289,105 @@ configure_zsh() {
     success "Zsh y herramientas de terminal configuradas correctamente"
 }
 
-# Función para mostrar el menú principal
-show_menu() {
-    clear
-    echo -e "${GREEN}Configuración de Debian para Desarrolladores${NC}"
-    echo "========================================"
-    echo "1. Actualizar sistema"
-    echo "2. Instalar paquetes esenciales"
-    echo "3. Instalar herramientas C/C++"
-    echo "4. Instalar Python"
-    echo "5. Instalar Java"
-    echo "6. Instalar Node.js"
-    echo "7. Instalar Docker"
-    echo "8. Instalar IDEs"
-    echo "9. Configurar Zsh"
-    echo "10. Instalar Ollama (IA local)"
-    echo "11. Verificar instalaciones"
-    echo "12. Mostrar componentes instalados"
-    echo "0. Salir"
-    echo "========================================"
+# Función para instalar Flatpak y Snap
+install_flatpak_snap() {
+    info "Instalando Flatpak y Snap..."
+    
+    sudo apt install -y flatpak || return 1
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || return 1
+    
+    sudo apt install -y snapd || return 1
+    sudo systemctl enable --now snapd.socket || return 1
+    
+    sudo ln -s /var/lib/snapd/snap /snap || warning "Error al crear enlace simbólico para snap (puede que ya exista)"
+    
+    success "Flatpak y Snap instalados y configurados correctamente"
+}
+
+# Función para instalar herramientas multimedia
+install_multimedia() {
+    info "Instalando herramientas multimedia..."
+    
+    sudo apt install -y audacity kdenlive kodi shotcut ffmpeg \
+        libavcodec-extra vlc || return 1
+    
+    success "Herramientas multimedia instaladas correctamente"
+}
+
+# Función para instalar herramientas gráficas
+install_graphics() {
+    info "Instalando herramientas gráficas..."
+    
+    sudo apt install -y inkscape gimp gimp-gmic gpick krita \
+        blender scribus darktable || return 1
+    
+    success "Herramientas gráficas instaladas correctamente"
+}
+
+# Función para instalar herramientas de ofimática
+install_office() {
+    info "Instalando herramientas de ofimática..."
+    
+    echo -e "Opciones de instalación:"
+    echo "1) LibreOffice (recomendado)"
+    echo "2) OnlyOffice"
+    echo "3) Ambos"
+    read -p "Selecciona una opción [1-3]: " option
+    
+    case $option in
+        1)
+            sudo apt install -y libreoffice libreoffice-l10n-es libreoffice-gtk3 || return 1
+            ;;
+        2)
+            # Descargar e instalar OnlyOffice
+            wget https://download.onlyoffice.com/install/desktop/editors/linux/onlyoffice-desktopeditors_amd64.deb || return 1
+            sudo dpkg -i onlyoffice-desktopeditors_amd64.deb || sudo apt-get install -f -y
+            rm onlyoffice-desktopeditors_amd64.deb
+            ;;
+        3)
+            sudo apt install -y libreoffice libreoffice-l10n-es libreoffice-gtk3 || return 1
+            wget https://download.onlyoffice.com/install/desktop/editors/linux/onlyoffice-desktopeditors_amd64.deb || return 1
+            sudo dpkg -i onlyoffice-desktopeditors_amd64.deb || sudo apt-get install -f -y
+            rm onlyoffice-desktopeditors_amd64.deb
+            ;;
+        *)
+            error "Opción no válida"
+            return 1
+            ;;
+    esac
+    
+    success "Herramientas de ofimática instaladas correctamente"
+}
+
+# Función para instalar VirtualBox
+install_virtualbox() {
+    info "Instalando VirtualBox para Debian Trixie..."
+    
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian trixie contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list || return 1
+    
+    wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg || return 1
+    
+    sudo apt update || return 1
+    sudo apt install -y virtualbox-7.0 || return 1
+    
+    sudo usermod -aG vboxusers $USER || warning "Error al añadir usuario al grupo vboxusers"
+    
+    success "VirtualBox instalado correctamente"
+}
+
+# Función para instalar Geany con temas
+install_geany() {
+    info "Instalando Geany con temas..."
+    
+    sudo apt install -y geany || return 1
+    
+    git clone https://github.com/codebrainz/geany-themes.git || return 1
+    cd geany-themes || return 1
+    ./install || warning "Error al instalar temas, pero Geany se instaló correctamente"
+    cd ..
+    rm -Rf geany-themes || warning "Error al eliminar archivos temporales"
+    
+    success "Geany con temas instalado correctamente"
 }
 
 # Función para mostrar el submenú de IDEs
@@ -332,7 +398,8 @@ show_ides_menu() {
     echo "1. Instalar Visual Studio Code"
     echo "2. Instalar Neovim con configuración"
     echo "3. Instalar IntelliJ IDEA"
-    echo "4. Volver al menú principal"
+    echo "4. Instalar Geany con temas"
+    echo "5. Volver al menú principal"
     echo "========================================"
 }
 
@@ -350,6 +417,10 @@ check_installations() {
     zsh --version || warning "Zsh no está instalado"
     code --version 2>/dev/null || warning "VS Code no está instalado"
     nvim --version 2>/dev/null | head -n 1 || warning "Neovim no está instalado"
+    virtualbox --version 2>/dev/null || warning "VirtualBox no está instalado"
+    geany --version 2>/dev/null || warning "Geany no está instalado"
+    flatpak --version 2>/dev/null || warning "Flatpak no está instalado"
+    snap --version 2>/dev/null || warning "Snap no está instalado"
     
     read -p "Presiona Enter para continuar..."
 }
@@ -370,6 +441,32 @@ show_installed_components() {
     read -p "Presiona Enter para continuar..."
 }
 
+# Función para mostrar el menú principal
+show_menu() {
+    clear
+    echo -e "${GREEN}Configuración de Debian para Desarrolladores${NC}"
+    echo "========================================"
+    echo "1. Actualizar sistema"
+    echo "2. Instalar paquetes esenciales"
+    echo "3. Instalar herramientas C/C++"
+    echo "4. Instalar Python"
+    echo "5. Instalar Java"
+    echo "6. Instalar Node.js"
+    echo "7. Instalar Docker"
+    echo "8. Instalar IDEs y editores"
+    echo "9. Configurar Zsh"
+    echo "10. Instalar Ollama (IA local)"
+    echo "11. Instalar Flatpak y Snap"
+    echo "12. Herramientas Multimedia"
+    echo "13. Herramientas Gráficas"
+    echo "14. Herramientas de Oficina"
+    echo "15. Instalar VirtualBox"
+    echo "16. Verificar instalaciones"
+    echo "17. Mostrar componentes instalados"
+    echo "0. Salir"
+    echo "========================================"
+}
+
 # Función principal
 main() {
     check_root
@@ -377,7 +474,7 @@ main() {
     
     while true; do
         show_menu
-        read -p "Selecciona una opción [0-12]: " option
+        read -p "Selecciona una opción [0-16]: " option
         
         case $option in
             1) update_system ;;
@@ -390,13 +487,14 @@ main() {
             8) 
                 while true; do
                     show_ides_menu
-                    read -p "Selecciona una opción [1-4]: " ide_option
+                    read -p "Selecciona una opción [1-5]: " ide_option
                     
                     case $ide_option in
                         1) install_vscode ;;
                         2) install_neovim ;;
                         3) install_intellij ;;
-                        4) break ;;
+                        4) install_geany ;;
+                        5) break ;;
                         *) error "Opción no válida" ;;
                     esac
                     
@@ -405,14 +503,20 @@ main() {
                 ;;
             9) configure_zsh ;;
             10) install_ollama ;;
-            11) check_installations ;;
-            12) show_installed_components ;;
+            11) install_flatpak_snap ;;
+            12) install_multimedia ;;
+            13) install_graphics ;;
+            14) install_office ;;
+            15) install_virtualbox ;;
+            16) check_installations ;;
+            17) show_installed_components ;;
             0) 
                 echo -e "${GREEN}¡Hasta luego!${NC}"
                 echo "Recomendaciones:"
                 echo "1. Cierra la sesión y vuelve a iniciar para aplicar todos los cambios"
                 echo "2. Ejecuta 'source ~/.zshrc' o reinicia tu terminal para cargar la configuración de Zsh"
                 echo "3. Para usar Docker sin sudo, necesitarás reiniciar tu sesión"
+                echo "4. Para VirtualBox, es posible que necesites reiniciar para cargar los módulos del kernel"
                 exit 0
                 ;;
             *) error "Opción no válida" ;;
