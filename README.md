@@ -23,6 +23,12 @@ chmod +x *.sh
 ./02_conf_arch.sh
 ```
 
+Para debian:
+```bash
+cd Instalaciones/debian
+chmod +x debian_install.sh
+./debian_install.sh
+```
 Conforme se actualicen las instalaciones se iran poniendo en el repositorio
 
 La instalacion de paquetes es totalmente personalizada y es en base a la programacion y desarrollo que realizo, python, java, bash... Y los editores que utilizo, como pueden ser neovim, vscode, zed, android studio..., así como determinados servicios como nextcloud desktop, etc...
